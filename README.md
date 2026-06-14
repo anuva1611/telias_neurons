@@ -5,6 +5,9 @@ Date: 6/12/2026
 # Purpose
 This SOP describes detailed steps for processing and analysing longitudinal in vivo fluorescence images of 2 individual neurons at 2 times using Fiji/ImageJ software. It covers preprocessing, stitching, neurite tracing, temporal comparison, and false positive/false negative assessment. (Optionally 3D reconstruction)
 
+# Final output 
+Please use this google drive link to find the original output folder:
+Screenshots of steps is added in the repository under `imagej_output_screenshots' for quick navigation. 
 
 # Assignment Methodology
 
@@ -31,7 +34,7 @@ The goal of this step is to remove any uneven background, boost contrast, reduce
 
     _Notes/rationale: We are using 50px as the tiles are 480×624px and neurites are thin (~3-5 px wide). Therefore a radius of 50px can capture the background without affecting the actual signal. Light background is uncheked as the images are grayscale fluorescence. Finally, sliding paraboloid will give more accurate correction on curved background._
 3. Contrast Enhancement (CLAHE): Instead of uisng the standard 'Enhance Contrast`, CLAHE adjusts to local regions which is better for neurons with soma and distal neurites. 
-    * Process -> Enhance Local Contrast (CLAHE)
+    * `Process` -> `Enhance Local Contrast (CLAHE)`
     * Set `Blocksize` = 63
     * Set `Histogram bins` = 256
     * Set `Maximum slope` = 1.5
@@ -59,8 +62,9 @@ The goal of this step is to remove any uneven background, boost contrast, reduce
         - Uncheck `Dont Reset Range`
         - Click Apply. The image should become black and white
 
-        _Notes/rationale: Otsu's method automatically finds the threshold by minimizing the variance within the two classes_
+    _Notes/rationale: Otsu's method automatically finds the threshold by minimizing the variance within the two classes_
     * `Process` -> `Binary` -> `Watershed` — this separates touching blobs
+    _Notes: This is optional depending on the image we are processing_
 6. Analyze: `Analyze` -> `Analyze Particles...`
     * `Size`: 500-Infinity (in pixels²) 
     * `Circularity`: 0.00 - 1.00 
@@ -76,17 +80,8 @@ The goal of this step is to remove any uneven background, boost contrast, reduce
     * Close the **separate_neighbor** duplicate 
 8. Save the original file under `outputs` > `step1_processed`
 
-### Batch Automation For all 90 Tiles (Optional)
-Instead of doing 90 tiles by hand, using the macro recording we can automate the workflow. Fiji can then run the macro on every file in the folder automatically.
-* `Plugins` -> `Macros` -> `Record...`
-* Complete each step under Step 1 (recording captures every click)
-* Click `Create in the Recorder`, it generates a macro script
-* `Process` -> `Batch` -> `Macro..`
-    - Input: i.e. raw_data/CELL1_TIME1/
-    - Output: i.e. outputs/step1_processed/CELL1_TIME1/
-    - Paste your macro into the text box
-    - `Output format`: TIFF
-    - Click `Process`
+
+
 
 
 # References
