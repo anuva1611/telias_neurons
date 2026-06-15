@@ -202,7 +202,16 @@ Zoom in close  and scan along the traced paths from the soma outward to the dend
     - Look closely at the raw image for real, branching fluorescent processes or very dim distal tips that do not have a colored tracing line on top of them.
     - Every time we spot a genuine biological neurite branch that we completely missed or forgot to trace, add $1$ to the FN count.
 
-2. Use the prepared python file, `analysis.py` to finish calculation and visualize results 
+2. Use the prepared python file, `analysis.py` to finish calculation and visualize results. 
+
+## Analysis 
+
+The following is a screenshot of the output of our False Positive, False Negetive analysis:
+![Analysis](Images/screenshots/FP_FN_Analysis.png)
+
+This manual validation yields high tracing accuracy across both cells and timepoints, with all F1-scores exceeding 91%.
+
+Tracing sensitivity was slightly constrained by the physical data profiles of the longitudinal imaging sessions. The drop in recall for Time 2 datasets (specifically CELL2_TIME2) correlates directly with lower baseline fluorescence intensity. Faint distal dendritic arbors near noise-dominated thresholds account for the majority of the recorded false negative counts.
 
 
 # References
