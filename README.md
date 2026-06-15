@@ -94,7 +94,7 @@ Now, all files are ready for processing.
     * On the original image (not the duplicate): go to `Edit` -> `Clear`; this fills that region with black (zero)
     * Close the **separate_neighbor** duplicate 
 8. Save the original file under `outputs` > `step1_processed`
-
+### The outputs for this step can be found in `outputs` > `step1_processed`
 
 ## Step 2: Image Stiching
 The goal for this step is to combine all processed tiles for each cell and timepoint into a single wide-field image of the whole cell.
@@ -116,16 +116,23 @@ Grid/Collection Stitching (which computes a global optimization across all tiles
         - use `Compute overlap`
         - Or pick x and y coordinates for fusing the images. 
 _Notes/rationale: Max Intensity is used as at each overlapping pixel, the brighter of the two tiles' values is kept, rather than averaged. Subpixel accuracy helps avoids 1px jumps/visible seams at tile boundaries when fusing thin structures_
-5. Continue until every tile for this dataset has been added
+5. Continue until every tile for this dataset has been added. We completed cell reconstruction for all four data sets. 
+### The outputs for this step is saved in `outputs` > `step2_stiched`
 
-Second dialog — registration parameters:
+![Cell 1 Time 1](Images/screenshots/cell1_time1_stiched.png)
+![Cell 1 Time 2](Images/screenshots/cell1_time2_stiched.png)
+![Cell 2 Time 1](Images/screenshots/cell2_time1_stiched.png)
+![Cell 2 Time 2](Images/screenshots/cell2_time2_stiched.png)
 
-Direction: Right
-Tile overlap [%]: 20
-Compute overlap: ✅ checked
-Subpixel accuracy: ✅ checked
-Fusion Method: Linear Blending
-Click OK
+
+## Step 3: Axon vs. Dendrite Separation, Labeling & Tracking
+The goal of this step is to trace every neurite process, label the axon vs. dendrites, and track changes between T1 and T2.
+
+
+## Step 4: T1  T2 Superimposed
+
+## Step 5: False Positives and False Negatives
+
 
 
 
