@@ -24,6 +24,21 @@ CELL2_TIME2 | 36 + 2 AVI |  480×624 px | uint8
 ## Step 1: Image Prepocessing & Optimization 
 The goal of this step is to remove any uneven background, boost contrast, reduce nouse, and isolate the target cells from any neighboring cells.
 
+The raw dataset has 2 AVI files (bs_011 and bs_013 files within CELL2_TIME2) which needs additional steps before processing:
+* `File` -> `Import` -> `AVI...` → select the AVI file
+* Leave `Use Virtual Stack` unchecked
+* Check `Convert to Grayscale`
+* `Image` -> `Stacks` -> `Z Project...`:
+    1. Set `Start slice` = 1 & `Stop slice` = 744 (default for that AVI file)
+    2. Set `Projection Type` to `Average Intensity`
+    3. Click OK
+    _Notes/rationale: The stacks are auto-filled by Fiji to cover the entire stack. A  average intensity projection type will average across all ~744 frames and reveal the underlying structure out of the per-frame noise_
+* Rescale: `Image` -> `Adjust` -> `Brightness/Contrast...`
+* `File` -> `Save As` -> `Tiff.`
+
+
+Now, all files are ready for processing. 
+
 1. Confirm Imagetype: Open each tile at a time to confirm they are grayscale images 624x480 px and 8-bit type; If this is not default image type can be found: `image` ->  `Type` 
 2. Background Subtraction: This will remove uneven glow that is visible. Follow these steps:
     * `Process` -> `Subtarct Background`
@@ -59,12 +74,12 @@ The goal of this step is to remove any uneven background, boost contrast, reduce
         - Method dropdown: select `Otsu` (instead of `Default`)
         - Select `B&W` in the color dropdown
         - Check `Dark background`
-        - Uncheck `Dont Reset Range`
+        - Check `Dont Reset Range`
         - Click Apply. The image should become black and white
 
     _Notes/rationale: Otsu's method automatically finds the threshold by minimizing the variance within the two classes_
     * `Process` -> `Binary` -> `Watershed` — this separates touching blobs
-    _Notes: This is optional depending on the image we are processing_
+    _Notes: This is optional depending on the image we are processing as oversegemntation may disrupt ROI manager to pickup all the regions_
 6. Analyze: `Analyze` -> `Analyze Particles...`
     * `Size`: 500-Infinity (in pixels²) 
     * `Circularity`: 0.00 - 1.00 
@@ -81,6 +96,36 @@ The goal of this step is to remove any uneven background, boost contrast, reduce
 8. Save the original file under `outputs` > `step1_processed`
 
 
+## Step 2: Image Stiching
+The goal for this step is to combine all processed tiles for each cell and timepoint into a single wide-field image of the whole cell.
+
+I renamed the processed files to match the file type of tile_{ii}.tif format for this step. For example, `ch2_20260310_bs_024_20260312_strip_ref001_001.tif` is now `tile_024.tif`.
+Grid/Collection Stitching (which computes a global optimization across all tiles at once) was tried first. For this dataset it produced a scattered, disconnected result. Therefore, I decided to use Pairwise Stitching where I iteratively ran one new tile at a time, only ever comparing the new tile against the immediately-preceding result. The steps are as follows:
+1. Open the first two tiles in bs order (e.g. c1t1tile_24.tif and c1t1tile_25.tif)
+2. `Plugins` -> `Stitching` -> `Pairwise Stitching`
+3. In the pop-up GUI, confirm:
+    * First image (reference): c1t1tile_24.tif
+    * Second image (to register): c1t1tile_25.tif
+    * Click OK
+4. Next, in the Pairwise Stiching GUI:
+    * `Fusion Method`: `Max. Intensity`
+    * Change the name of the output file if desired 
+    * Keep `Check Peaks` between 1-5
+    * Check `Subpixel accuracy`
+    * Depending on the images we can either:
+        - use `Compute overlap`
+        - Or pick x and y coordinates for fusing the images. 
+_Notes/rationale: Max Intensity is used as at each overlapping pixel, the brighter of the two tiles' values is kept, rather than averaged. Subpixel accuracy helps avoids 1px jumps/visible seams at tile boundaries when fusing thin structures_
+5. Continue until every tile for this dataset has been added
+
+Second dialog — registration parameters:
+
+Direction: Right
+Tile overlap [%]: 20
+Compute overlap: ✅ checked
+Subpixel accuracy: ✅ checked
+Fusion Method: Linear Blending
+Click OK
 
 
 
@@ -91,4 +136,4 @@ The goal of this step is to remove any uneven background, boost contrast, reduce
 * https://imagej.net/ij/docs/menus/process.html
 * https://imagej.net/imaging/particle-analysis
 * https://imagej.net/scripting/batch 
-
+* https://pubmed.ncbi.nlm.nih.gov/19346324/ 
