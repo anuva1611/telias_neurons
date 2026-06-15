@@ -32,7 +32,7 @@ width = 0.25
 
 fig, ax = plt.subplots(figsize=(10, 6))
 # Generate grouped bars side-by-side
-ax.bar([i - width for i in x], precision_vals, width, label='Precision', color='greem')
+ax.bar([i - width for i in x], precision_vals, width, label='Precision', color='green')
 ax.bar(x, recall_vals, width, label='Recall', color='blue')
 ax.bar([i + width for i in x], f1_vals, width, label='F1-Score', color='yellow', edgecolor='blue')
 ax.set_ylabel('Score Gradient (0.0 - 1.0)')
