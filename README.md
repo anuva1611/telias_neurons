@@ -119,21 +119,90 @@ _Notes/rationale: Max Intensity is used as at each overlapping pixel, the bright
 5. Continue until every tile for this dataset has been added. We completed cell reconstruction for all four data sets. 
 ### The outputs for this step is saved in `outputs` > `step2_stiched`
 
+Cell 1 @T=1, stiched:
 ![Cell 1 Time 1](Images/screenshots/cell1_time1_stiched.png)
+Cell 1 @T=2, stiched:
 ![Cell 1 Time 2](Images/screenshots/cell1_time2_stiched.png)
+Cell 2 @T=1, stiched:
 ![Cell 2 Time 1](Images/screenshots/cell2_time1_stiched.png)
+Cell 2 @T=2, stiched:
 ![Cell 2 Time 2](Images/screenshots/cell2_time2_stiched.png)
 
 
 ## Step 3: Axon vs. Dendrite Separation, Labeling & Tracking
 The goal of this step is to trace every neurite process, label the axon vs. dendrites, and track changes between T1 and T2.
 
+1. Setup & Soma Identification:
+    * Open a stiched cell
+    * Open the ROI Manager: `Analyze` -> `Tools` -> `ROI Manager`
+    Select the Oval Selection Tool, draw a circle around the central soma, press T to add it to the manager, click it, and rename it to soma.
+2. Trace the Axon:
+    * Right-click the Line Tool and select the Segmented Line Tool.
+    * Locate the single longest, thinnest, least-branched process exiting the soma (the axon).
+    * Click along its path from the soma boundary to its furthest distal tip. Double-click to complete the line.
+    * Press T to add it to the ROI Manager. Rename it exactly to axon.
+3. Trace the Dendrites:
+    * Use the Segmented Line Tool to trace each dendritic branch. Start from the soma boundary (or parent branch point) and click along the path to the tip. Double-click to finish.
+    * Press T after each trace. Label them sequentially: dendrite_01, dendrite_02, dendrite_03, etc.
+4. Configure & Measure Lengths:
+    * Go to `Analyze` -> `Set Measurements...` and ensure Perimeters and area are checked. 
+    * In the ROI Manager, select all ROIs  and click Measure (on the Fiji/ImageJ GUI). 
+    * In the Results window, go to `File` ➔ `Save As...` and save the file to the workspace under outputs/step3_traced/..
+5. Export Labeled Visualization Overlay:
+    * In the ROI Manager, highlight the axon ROI, click `Properties...`, and change its Stroke Color to blue.
+    * Highlight all dendrites ROIs, click `Properties...`, and set their Stroke Color to red.
+    * Go to `Image` -> `Overlay` -> `Flatten`. This creates a new RGB display window
+    * Save this window in outputs/step3_traced/..
+6. Save the Vector ROIs:
+    * In the ROI Manager, select all items and click More ➔ Save....
+    * Save the file.
+_Do these sreps for all four cell datasets_
+
+### The outputs for this step is saved in `outputs` > `step3_traced`
 
 ## Step 4: T1  T2 Superimposed
 
+1. Manual Alignment:
+    * Open both cell1_time1_stitched.tif and cell1_time2_stitched.tif.
+    * Find the coordinates of the center of the soma in both images using the cursor.
+    * Subtract the coordinates to find the translation offset ($\Delta x$, $\Delta y$).
+
+2. Click on the Time 2 image, go to `Image` -> `Transform` -> `Translate...`, 
+    * Enter calculated offsets, and save the resulting file: cell1_time2_aligned.tif
+
+3. Generate the Color Composite: 
+This step requires the two images to be the same dimentions. If the images are not of the same dimentions, we crop them to match length and width. Then we can create color composits for both cells. 
+- Go to `Image` -> `Color` -> `Merge Channels...`
+- Set C1 (Red) = cell1_time2_aligned.tif
+- Set C2 (Green) = cell1_time1_stitched.tif
+- Check `Create Composite` and click OK. 
+- Save the result
+
+Cell 1 Composite:
+![Cell 1](Images/screenshots/cell1_colorcomposite.png)
+
+Cell 2 Composite:
+![Cell 2](Images/screenshots/cell2_colorcomposite.png)
+
+### The outputs for this step is saved in `outputs` > `step4_superimposed`
+
+
 ## Step 5: False Positives and False Negatives
 
+1. Manually calculate False Positives and False Negatives:
+Zoom in close  and scan along the traced paths from the soma outward to the dendritic 
 
+* Confirmed True Positives (TP)
+    - Look at a line we traced and check the raw image underneath it. If there is a clear, visible fluorescent neurite path under the line, that is a True Positive.
+    - This will typically be the vast majority of the traces. If we traced 45 total branches and almost all of them perfectly match real structures, the TP count will be close to that total
+* False Positives (FP)
+    - Look for any traced line in the overlay that is passing over pure black background or a faint blur that doesn't look like a real cell process. This happens if background noise or an artifact looked like a dendrite while we were clicking quickly.
+    - Every time we find a line we drew that has no real structure underneath it on the raw image, add $1$ to the FP count. 
+* False Negatives (FN)
+    - Look closely at the raw image for real, branching fluorescent processes or very dim distal tips that do not have a colored tracing line on top of them.
+    - Every time we spot a genuine biological neurite branch that we completely missed or forgot to trace, add $1$ to the FN count.
+
+2. Use the prepared python file, `analysis.py` to finish calculation and visualize results 
 
 
 # References
