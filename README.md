@@ -6,8 +6,7 @@ Date: 6/12/2026
 This SOP describes detailed steps for processing and analysing longitudinal in vivo fluorescence images of 2 individual neurons at 2 times using Fiji/ImageJ software. It covers preprocessing, stitching, neurite tracing, temporal comparison, and false positive/false negative assessment. (Optionally 3D reconstruction)
 
 # Final output 
-Please use this google drive link to find the original output folder:
-Screenshots of steps is added in the repository under `imagej_output_screenshots' for quick navigation. 
+Please use this google drive link to find the original output folder.
 
 # Assignment Methodology
 
@@ -119,15 +118,6 @@ _Notes/rationale: Max Intensity is used as at each overlapping pixel, the bright
 5. Continue until every tile for this dataset has been added. We completed cell reconstruction for all four data sets. 
 ### The outputs for this step is saved in `outputs` > `step2_stiched`
 
-Cell 1 @T=1, stiched:
-![Cell 1 Time 1](Images/screenshots/cell1_time1_stiched.png)
-Cell 1 @T=2, stiched:
-![Cell 1 Time 2](Images/screenshots/cell1_time2_stiched.png)
-Cell 2 @T=1, stiched:
-![Cell 2 Time 1](Images/screenshots/cell2_time1_stiched.png)
-Cell 2 @T=2, stiched:
-![Cell 2 Time 2](Images/screenshots/cell2_time2_stiched.png)
-
 
 ## Step 3: Axon vs. Dendrite Separation, Labeling & Tracking
 The goal of this step is to trace every neurite process, label the axon vs. dendrites, and track changes between T1 and T2.
@@ -178,11 +168,6 @@ This step requires the two images to be the same dimentions. If the images are n
 - Check `Create Composite` and click OK. 
 - Save the result
 
-Cell 1 Composite:
-![Cell 1](Images/screenshots/cell1_colorcomposite.png)
-
-Cell 2 Composite:
-![Cell 2](Images/screenshots/cell2_colorcomposite.png)
 
 ### The outputs for this step is saved in `outputs` > `step4_superimposed`
 
