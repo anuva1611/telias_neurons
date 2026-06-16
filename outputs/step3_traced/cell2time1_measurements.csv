@@ -1,7 +1,0 @@
- ,Label,Area,Mean,Min,Max,Perim.,Length
-1,cell2time1_traced.tif:soma,15876,202.080,0.000,255.000,448.175,0.000
-2,cell2time1_traced.tif:axon,1029,141.400,91.382,193.516,1028.649,1028.649
-3,cell2time1_traced.tif:dendrite_01,345,104.726,77.540,147.536,344.503,344.503
-4,cell2time1_traced.tif:dendrite_02,376,87.668,67.207,142.441,375.431,375.431
-5,cell2time1_traced.tif:dendrite_03,474,99.658,78.558,136.396,473.327,473.327
-6,cell2time1_traced.tif:dendrite_04,448,88.474,60.865,138.934,447.484,447.484
